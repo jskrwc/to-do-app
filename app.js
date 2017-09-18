@@ -1,61 +1,49 @@
 function onReady() {
-  const addToDoForm = document.getElementById('addToDoForm');
-  const newToDoText = document.getElementById('newToDoText');
-  const toDoList = document.getElementById('toDoList');
-  // const isBusy = false;
-  addToDoForm.addEventListener('submit', (event) => {
-   event.preventDefault();
-  //  if(isBusy)return;
-  //  isBusy = true;
+  var toDos =[];
+  var addToDoForm = document.getElementById('addToDoForm');
 
-   // get the text
-   let title = newToDoText.value;
+  function createNewToDo() {
+    var newToDoText = document.getElementById('newToDoText');
+     toDos.push({
+       title: newToDoText.value,
+       complete: false
+     });
+     newToDoText.value = '';  //clear text input
+     renderTheUI(toDos);
+  }
 
-   // create a new li
-   let newLi = document.createElement('li');
+  function renderTheUI(toDos) {
+    var toDoList = document.getElementById('toDoList');
+    toDoList.innerHTML=''; //set newLi to empty string
+    //toDoList.deleteButton='Delete Me'; //text for the delete button
+    toDos.forEach(function(toDo) {
+      var newLi = document.createElement('li');
+      var checkbox = document.createElement('input');
+      checkbox.type = "checkbox";
+      newLi.innerHTML = toDo.title; //??add toDo's title text to newLi
+      toDoList.appendChild(newLi);   //adds todo item
+      newLi.appendChild(checkbox);   //adds checkbox
 
-   // create a new input for the checkbox
-   let checkbox = document.createElement('input');
+      //add deleteButton
+      var deleteButton = document.createElement('button');
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete Me";
+      newLi.appendChild(deleteButton);  //adds delete button
 
-   // set the input's type to checkbox
-   checkbox.type = "checkbox";
-
-   // set the title
-   newLi.textContent = title;
-
-   // attach it to the ul
-   toDoList.appendChild(newLi);
-
-   // attach the checkbox to the li
-   newLi.appendChild(checkbox);
-
-   //empty the input (so user not have to)
-   newToDoText.value = '';
-
- // DELETE button
-   // create new input for delete button
-   let deleteButton = document.createElement('button');
-
-   //set the delete button type to button
-   deleteButton.type = "button";
-
-   // set the button's textContent
-   deleteButton.textContent = "DeleteMe";
-
-   // add the Delete button to the li
-   newLi.appendChild(deleteButton);
-
-   //listen for delete click
-    deleteButton.addEventListener('click', (event) => {
-      toDoList.removeChild(newLi);
+      //listen for delete click
+       deleteButton.addEventListener('click', (event) => { //delete todo
+         toDoList.removeChild(newLi);
+       });
     });
+  }
 
-  //  isBusy=false;
- });
+  addToDoForm.addEventListener('submit', function(event) {
+      event.preventDefault(); //??prevent page from reloading
+      createNewToDo();
+  });
 
-
-
-}
+  renderTheUI(toDos);
+  }
 
 window.onload = function() {
   alert("The window has loaded!");
